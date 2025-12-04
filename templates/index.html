@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Today’s Calories{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="display-5 text-primary">
+            <i class="fas fa-utensils"></i> Welcome Back!
+        </h1>
+        <p class="lead">Track what you eat. Stay on target.</p>
+        <h4>Today: {{ today.strftime('%A, %B %d, %Y') }}</h4>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-lg border-primary">
+            <div class="card-body text-center">
+                <h2>{{ today_calories }} <small class="text-muted">/ {{ daily_goal }} cal</small></h2>
+                <div class="progress mt-3">
+                    <div class="progress-bar
+                        {% if progress >= 100 %}bg-danger{% elif progress >= 80 %}bg-warning{% else %}bg-success{% endif %}"
+                         style="width: {{ progress }}%">
+                        {{ progress|round(0) }}%
+                    </div>
+                </div>
+                <p class="mt-3">
+                    {% if remaining_calories > 0 %}
+                        <strong class="text-success">{{ remaining_calories }} calories remaining</strong>
+                    {% elif over_by > 0 %}
+                        <strong class="text-danger">Over by {{ over_by }} calories</strong>
+                    {% else %}
+                        <strong class="text-success">On target!</strong>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h5><i class="fas fa-bullseye"></i> Daily Goal</h5>
+                <h3>{{ daily_goal }} cal</h3>
+                <a href="{{ url_for('settings') }}" class="btn btn-light btn-sm">Change Goal</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-5"><i class="fas fa-list"></i> Today’s Food Entries</h3>
+{% if entries %}
+<div class="row">
+    {% for entry in entries %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card card-hover h-100">
+            <div class="card-body">
+                <h6 class="card-title">{{ entry.food }}</h6>
+                <p class="text-primary fw-bold">{{ entry.calories }} cal</p>
+                <small class="text-muted">
+                    <i class="fas fa-clock"></i> {{ entry.datetime.strftime('%I:%M %p') }}
+                </small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <p class="text-muted">No food logged today.</p>
+    <a href="{{ url_for('log_food') }}" class="btn btn-primary btn-lg">
+        <i class="fas fa-plus"></i> Log Your First Meal
+    </a>
+</div>
+{% endif %}
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('log_food') }}" class="btn btn-success btn-lg">
+        <i class="fas fa-plus-circle"></i> Add Food
+    </a>
+</div>
+{% endblock %}

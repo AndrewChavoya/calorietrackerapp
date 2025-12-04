@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Log Food{% endblock %}
+
+{% block content %}
+<h2><i class="fas fa-utensils"></i> Log Food Entry</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Food Name</label>
+                        <input type="text" name="food" class="form-control" placeholder="e.g., Grilled Chicken Salad" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Calories</label>
+                        <input type="number" name="calories" class="form-control" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date & Time Eaten</label>
+                        <input type="datetime-local" name="datetime" class="form-control" 
+                               value="{{ now().strftime('%Y-%m-%dT%H:%M') }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">Log Food</button>
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">Back to Dashboard</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <h4>Recent Entries</h4>
+        <div class="list-group">
+            {% for entry in entries %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{ entry.food }}</h6>
+                    <small class="text-muted">{{ entry.datetime.strftime('%b %d, %I:%M%p') }}</small>
+                </div>
+                <p class="mb-1 text-primary fw-bold">{{ entry.calories }} calories</p>
+            </div>
+            {% else %}
+            <p class="text-muted text-center">No entries yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

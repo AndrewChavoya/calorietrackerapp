@@ -1,13 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, date
-import os
 
 app = Flask(__name__)
-app.secret_key = 'calorie-tracker-secret'
+app.secret_key = 'calorie-tracker-secret-123'
 
-# In-memory storage
-food_entries = []  # List of dicts: {'food': str, 'calories': int, 'datetime': datetime}
-daily_goal = 2000  # Default goal
+# ←←← THIS IS THE CORRECT FIX FOR YOUR CALORIE TRACKER ←←←
+@app.context_processor
+def inject_now():
+    return {'now': datetime.now}   # ← NO parentheses! We pass the FUNCTION itself
+# ←←← END OF FIX ←←←
+
+# Your existing storage
+food_entries = []
+daily_goal = 2000
 
 def get_today_entries():
     today = date.today()
